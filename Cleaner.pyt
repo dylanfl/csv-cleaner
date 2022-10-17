@@ -13,7 +13,7 @@ def open():
     file = file.read()
     df = pd.read_csv(file, delim_whitespace=True)
 
-label = Label(win, text="Kidatu Billing", font=('Georgia 13'))
+label = Label(win, text="Billing", font=('Georgia 13'))
 label.pack(pady=10)
 ttk.Button(win, text="Browse", command=open).pack(pady=20)
 
