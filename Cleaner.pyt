@@ -1,35 +1,40 @@
-import csv, sys
 import pandas as pd
 import numpy as np
+import warnings
+import tkinter as tk
 from tkinter import *
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog as fd
 from tkinter.filedialog import askopenfile
+#importing all the libraries needed
 
-win = Tk()
-win.geometry("600x250")
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
-def open():
-    file = filedialog.askopenfile(mode='a', filetypes=[('Microsoft Excel Comma Separated Values File','csv')])
-    file = file.read()
-    df = pd.read_csv(file, delim_whitespace=True)
+filetypes = (
+       ('Excel Files', '*.CSV'),
+       ('All files', '*.*')
+  )
 
-label = Label(win, text="Billing", font=('Georgia 13'))
-label.pack(pady=10)
-ttk.Button(win, text="Browse", command=open).pack(pady=20)
+filename = fd.askopenfilename(
+      title='Open a file',
+      initialdir='/',
+      filetypes=filetypes)
+#this allows the user to pick the file from a popup box rather than inputting the file name
 
-win.mainloop()
+df = pd.read_csv(filename, header = None, prefix = 'Column ',engine='python',dtype=str)
+df=df.applymap(str)
+#opens the file and reads it as a string to avoid removing 0's from start of phone numbers
 
-filename = 'file'
-with open(filename, newline='') as f:
-    reader = csv.reader(f)
-    try:
-        for row in reader:
-            print(row)
-    except csv.Error as e:
-        sys.exit('file {}, line {}: {}'.format(filename, reader.line_num, e))
+print(df.info())
+#prints the initial info on the csv file
 
-df = pd.read_csv('TEST.csv', header = None)
 for x in df.index:
-  if df.loc[x, 2] > 1:
+  if df.loc[x, "Column 2" and "Column 3"]  == 'nan':
     df.drop(x, inplace = True)
+#removes the empty rows if column 2 and 3 are nan
+
+df=df.astype(str).replace('nan',np.nan)
+#removes nan fields
+
+df.to_csv(filename, sep=',',index=False,header=False,quoting=1)
+#saves the file again
 
